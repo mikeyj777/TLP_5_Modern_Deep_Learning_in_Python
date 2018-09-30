@@ -70,14 +70,14 @@ def get_spiral():
 def get_transformed_data():
     print("Reading in and transforming data...")
 
-    if not os.path.exists('data/train.csv'):
-        print('Looking for data/train.csv')
+    if not os.path.exists('data/mnist.csv'):
+        print('Looking for data/mnist.csv')
         print('You have not downloaded the data and/or not placed the files in the correct location.')
         print('Please get the data from: https://www.kaggle.com/c/digit-recognizer')
-        print('Place train.csv in the folder large_files adjacent to the class folder')
+        print('Place mnist.csv in the folder large_files adjacent to the class folder')
         exit()
 
-    df = pd.read_csv('data/train.csv')
+    df = pd.read_csv('data/mnist.csv')
     data = df.values.astype(np.float32)
     np.random.shuffle(data)
 
@@ -99,7 +99,7 @@ def get_transformed_data():
     Ztrain = pca.fit_transform(Xtrain)
     Ztest = pca.transform(Xtest)
 
-    plot_cumulative_variance(pca)
+    # plot_cumulative_variance(pca)
 
     # take first 300 cols of Z
     Ztrain = Ztrain[:, :300]
@@ -117,14 +117,14 @@ def get_transformed_data():
 def get_normalized_data():
     print("Reading in and transforming data...")
 
-    if not os.path.exists('data/train.csv'):
-        print('Looking for data/train.csv')
+    if not os.path.exists('data/mnist.csv'):
+        print('Looking for data/mnist.csv')
         print('You have not downloaded the data and/or not placed the files in the correct location.')
         print('Please get the data from: https://www.kaggle.com/c/digit-recognizer')
-        print('Place train.csv in the folder large_files adjacent to the class folder')
+        print('Place mnist.csv in the folder large_files adjacent to the class folder')
         exit()
 
-    df = pd.read_csv('data/train.csv')
+    df = pd.read_csv('data/mnist.csv')
     data = df.values.astype(np.float32)
     np.random.shuffle(data)
     X = data[:, 1:]
@@ -194,6 +194,13 @@ def y2indicator(y):
     for i in range(N):
         ind[i, y[i]] = 1
     return ind
+
+
+def initwb(D, M, scale):
+
+    W = np.random.randn(D, M) / scale
+    b = np.zeros(M)
+    return W, b
 
 
 def benchmark_full():
@@ -274,7 +281,7 @@ def benchmark_pca():
     # D = 300 -> error = 0.07
     lr = 0.0001
     reg = 0.01
-    for i in range(200):
+    for i in range(500):
         p_y = forward(Xtrain, W, b)
         # print "p_y:", p_y
         ll = cost(p_y, Ytrain_ind)
@@ -303,5 +310,5 @@ def benchmark_pca():
 
 
 if __name__ == '__main__':
-    # benchmark_pca()
-    benchmark_full()
+    benchmark_pca()
+    # benchmark_full()
